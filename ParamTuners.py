@@ -7,7 +7,7 @@ import optuna
 class CVHandler():
     def __init__(self,params,is_minimize=True,nfold=3,cv_type="Classical",random_seed=2021):
         self.params=params
-        self.is_mimimize=is_minimize
+        self.is_minimize=is_minimize
         self.nfold=nfold
         self.cv_type=cv_type
         self.early_rounds=round(1/params['learning_rate']+5)
