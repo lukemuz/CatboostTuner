@@ -4,17 +4,19 @@ CatboostTuner is a library designed for accurate hyperparameter tuning of Catboo
 ## Motivation
 While the Catboost defaults often give acceptable results, hyperparameter tuning is essential for maximizing the quality of the model.
 
-There are many packages that attempt to deal with this.  Catboost itself has a grid tuner and a random tuner built in.  These work by using a single validation data set to evaluate the choice of hyperparameter.  This works well for some datasets, but for others, this can be too noisy.  In my experience, a better model can be found by using  k-fold cross-validation with k>=3 for evaluation.  
+There are many packages that attempt to deal with this.  Catboost itself has a grid tuner and a random tuner built in.  These work by using a single validation data set to evaluate the choice of hyperparameter.  This works well for some datasets, but for others, it can be too noisy.  This can make optimization difficult or impossible.  A better model can often be found by using k-fold cross-validation with k>=3 for evaluation, although it is computationally more expensive.  
 
-There are also general purpose hyperparameter tuners, most notably Optuna.  Optuna is not specifically designed to work efficiently with Catboost.  In my experience, Optuna works well for a small number of parameters, but requires a very large number of trials when the number of parameters is large.  
+There are also general purpose hyperparameter tuners, most notably Optuna.  Optuna is not specifically designed to work efficiently with Catboost.  Optuna works well for a small number of parameters, but tends to require a very large number of trials when the dimensionality of parameters is large.    
 
-In CatboostTuner, hyperparameters are tuned sequentially in the spirit of a "coordinate descent" algorithm.  This reduces the size of the search space and provides a good result relatively quickly (although it has no guarantees of being globally optimal).  Optionally, CatboostTuner uses Optuna to "fine-tune" the result of the sequential tuning.      
+In CatboostTuner, hyperparameters are tuned sequentially in the spirit of a "coordinate descent" algorithm.  This reduces the size of the search space and provides a good result relatively quickly (I am not aware of any results on the convexity of hy).  Optionally, CatboostTuner uses Optuna to "fine-tune" the result of the sequential tuning. 
+
+Scikit-Optimize works well with all Scikit-Learn models, but requires users to manually set the search spaces of all parameters.  It's not "automatic" and does not offer feature selection options. 
 
 Other packages, like AutoGluon and Mljar are fully automatic machine learning model fitting packages.  Given enough time, these can produce excellent results, but in my experience, they can be computational overkill.  By default, they test many very similar model types (e.g. LightGBM, XGBoost and Catboost), when resources could be used to better fine-tune a single model.  
 
-CatboostTuner is designed to be much more lightweight and focused on tuning a single model.  In the future, I may add options for automatic model ensembling, but that is not the current focus.      
+CatboostTuner is designed to be lightweight and focused on tuning a single model.  In the future,  options may be added for automatic model ensembling, but that is not the current focus.      
 
-CatboostTuner is still under active development, and many features are not yet enabled.  
+CatboostTuner is still under active development and some features may not be available. 
  
 
 ## Installation
@@ -52,9 +54,9 @@ CatboostTuner only accepts numeric data at this time.  The Catboost package has 
 
 The feature_selection option has not produced promising results in some tests.  This logic will be reevaluated.
 
-Usage documentation is needed before being released to a package manager.  
+Usage documentation is needed before being officially released.  
 
-Future considerations:
+#### Future considerations:
 
 Automatic Ensembling
 
