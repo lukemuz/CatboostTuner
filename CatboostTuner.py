@@ -5,7 +5,7 @@ from ParamTuners import FeatureSelectionTuner, IterationsTuner, ParamGridTuner, 
 
 
 class CatboostTuner():
-    def __init__(self,loss_function='RMSE',eval_metric='RMSE',time_budget=3600,feature_selection=True,optuna_fine_tune=True,is_minimize=True):
+    def __init__(self,loss_function='RMSE',eval_metric='RMSE',time_budget=3600,feature_selection=False,optuna_fine_tune=False,is_minimize=True):
         self.loss_function=loss_function
         self.eval_metric=eval_metric
         self.time_budget=time_budget #for parameter tuning, additional time needed to fit final model
@@ -37,7 +37,7 @@ class CatboostTuner():
         return([3,4,5,6])
 
     def _create_feature_grid(self,num_trials):
-        return([0,0.2,1,3,5])
+        return([0,0.1,0.25,.75,1,3,5])
 
     def _create_subsample_grid(self,num_trials):
         return([.3,.4,.5,.6,.7,.8,.9])
@@ -48,7 +48,15 @@ class CatboostTuner():
     def _create_l2_leaf_reg_grid(self,num_trials):
         return([2,2.5,3,3.5,4])
 
-    def run(self,X,y,w=None,learning_rate=0.03,nfold=3,cv_type="Classical",random_seed=2021,tuning_learning_rate=.15):
+    def predict(self,X):
+        if self.feature_selection:
+            X_subset=X[self.selected_features]
+            pred=self.tuned_model.predict(X_subset)
+        else:
+            pred=self.tuned_model.predict(X)
+        return(pred)
+
+    def run(self,X,y,w=None,learning_rate=0.03,nfold=3,cv_type="Classical",random_seed=2021,tuning_learning_rate=.03):
         ##tuning plan:
         ##First, tune sequentially
         ##next, remove features by eliminating them on basis of feature importance
@@ -97,7 +105,7 @@ class CatboostTuner():
             feature_grid=self._create_feature_grid(num_trials=time_budget.get_num_trials('feature_selection'))
             feature_tuner=FeatureSelectionTuner(self.params,is_minimize=self.is_minimize,cv_type=cv_type,cv_random_seed=random_seed)
             feature_tuner.tune(X,y,mod1,feature_grid,w=w,nfold=nfold)
-            self.selected_features=feature_tuner.get_selected_features
+            self.selected_features=feature_tuner.get_selected_features(X,mod1)
 
             #replace X with X_subset
             X=feature_tuner.get_x_subset(X,mod1)

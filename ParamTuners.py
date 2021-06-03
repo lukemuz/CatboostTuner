@@ -10,7 +10,7 @@ class CVHandler():
         self.is_minimize=is_minimize
         self.nfold=nfold
         self.cv_type=cv_type
-        self.early_rounds=round(1/params['learning_rate']+5)
+        self.early_rounds=round(1/params['learning_rate']*3+5)
         self.random_seed=random_seed
         self.cv_out=None
 
@@ -107,8 +107,8 @@ class OptunaFineTuner(ParamTuner):
         
         subsample_lb=param_init['subsample']-.1
         if subsample_lb<=0:
-            subsample=.01
-        subsample_ub=subsample+.1
+            subsample_lb=.01
+        subsample_ub=param_init['subsample']+.1
         if subsample_ub >1:
             subsample_ub=1
         
@@ -131,8 +131,8 @@ class OptunaFineTuner(ParamTuner):
 
         def optuna_cv(trial):
             param_trial={
-            'loss_function':self.loss_function,
-            'eval_metric':self.eval_metric,
+            'loss_function':param_init['loss_function'],
+            'eval_metric':param_init['eval_metric'],
             'learning_rate':param_init['learning_rate'],
             'bootstrap_type':'Bernoulli',
             'subsample':trial.suggest_uniform('subsample',subsample_lb,subsample_ub),
