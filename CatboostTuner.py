@@ -8,7 +8,7 @@ class CatboostTuner():
     def __init__(self,loss_function='RMSE',eval_metric='RMSE',time_budget=3600,feature_selection=False,optuna_fine_tune=False,is_minimize=True):
         self.loss_function=loss_function
         self.eval_metric=eval_metric
-        self.time_budget=time_budget #for parameter tuning, additional time needed to fit final model
+        self.time_budget=time_budget 
         self.feature_selection=feature_selection
         self.tuned_model=None
         self.final_cv=None
@@ -31,6 +31,10 @@ class CatboostTuner():
 
         }
     def _create_rsm_grid(self,num_trials):
+        #create functionality to generate search grid based on number of trials 
+        # allocated by the time budget controller
+
+        #for now, returning a default grid
         return([.2,.3,.4,.5,.6,.7,.8,.9])
 
     def _create_depth_grid(self,num_trials):
