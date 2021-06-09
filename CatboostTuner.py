@@ -35,13 +35,13 @@ class CatboostTuner():
         # allocated by the time budget controller
 
         #for now, returning a default grid
-        return([.2,.3,.4,.5,.6,.7,.8,.9])
+        return([.1,.2,.3,.4,.5,.6,.7,.8,.9])
 
     def _create_depth_grid(self,num_trials):
         return([3,4,5,6])
 
     def _create_feature_grid(self,num_trials):
-        return([0,0.1,0.25,.75,1,3,5])
+        return([0,0.001,0.1,0.25,.75,1,3])
 
     def _create_subsample_grid(self,num_trials):
         return([.3,.4,.5,.6,.7,.8,.9])
