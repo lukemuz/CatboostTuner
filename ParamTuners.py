@@ -5,12 +5,13 @@ from catboost import cv, CatBoost,Pool
 import optuna
 
 class CVHandler():
+    #object that can run catboost CV
     def __init__(self,params,is_minimize=True,nfold=3,cv_type="Classical",random_seed=2021):
         self.params=params
         self.is_minimize=is_minimize
         self.nfold=nfold
         self.cv_type=cv_type
-        self.early_rounds=round(1/params['learning_rate']*3+5)
+        self.early_rounds=round(1/params['learning_rate']*3+5) ##this is a heuristic that seems to work well
         self.random_seed=random_seed
         self.cv_out=None
 
@@ -95,6 +96,7 @@ class ParamGridTuner(ParamTuner):
 
     
 class OptunaFineTuner(ParamTuner):
+    ##search for a better solution within a small neighborhood around current solution 
     def tune(self,X,y,w=None,nfold=3,time_limit=300):
         pool_data=Pool(data=X,label=y,weight=w)
         param_init=self.params
@@ -155,6 +157,8 @@ class OptunaFineTuner(ParamTuner):
         return self.result
 
 class FeatureSelectionTuner(ParamTuner):
+    #the idea is to set an importance threshold
+    #and remove features that fall below that
     def feature_selection_subsetter(self,X,model,threshold):
         imp=model.get_feature_importance()
         var_list=[]

@@ -38,18 +38,28 @@ class CatboostTuner():
         return([.1,.2,.3,.4,.5,.6,.7,.8,.9])
 
     def _create_depth_grid(self,num_trials):
+        #not yet functional
+        #returning default grid
         return([3,4,5,6])
 
     def _create_feature_grid(self,num_trials):
+        #not yet functional
+        #returning default grid
         return([0,0.001,0.1,0.25,.75,1,3])
 
     def _create_subsample_grid(self,num_trials):
+        #not yet functional
+        #returning default grid
         return([.3,.4,.5,.6,.7,.8,.9])
 
     def _create_random_strength_grid(self,num_trials):
+        #not yet functional
+        #returning default grid
         return([.5,1,1.5,2])
     
     def _create_l2_leaf_reg_grid(self,num_trials):
+        #not yet functional
+        #returning default grid
         return([2,2.5,3,3.5,4])
 
     def predict(self,X):
